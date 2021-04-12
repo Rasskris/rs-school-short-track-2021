@@ -1,4 +1,4 @@
-// const ListNode = require('../extensions/list-node');
+const ListNode = require('../extensions/list-node');
 /**
  * Implement the Queue with a given interface via linked list (use ListNode extension above).
  *
@@ -11,17 +11,47 @@
  *
  */
 
+/* eslint max-len: ["error", { "code": 110 }] */
+/* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["queue"] }] */
 class Queue {
-  get size() {
-    throw new Error('Not implemented');
+  constructor () {
+    this.queue = new ListNode();
+    this.length = 0;
   }
 
-  enqueue(/* element */) {
-    throw new Error('Not implemented');
+  get size() {
+    return this.length;
+  }
+
+  enqueue(element) {
+    if (!this.queue.value) {
+      this.queue.value = element;
+    } else {
+      const next = this.queue;
+      this.queue = new ListNode(element);
+      this.queue.next = next;
+    }
+    this.length += 1;
   }
 
   dequeue() {
-    throw new Error('Not implemented');
+    this.length -= 1;
+    let result;
+    if (!this.queue.next) {
+      result = this.queue.value;
+      this.queue = new ListNode();
+      return result;
+    }
+    const iter = (queue) => {
+      const tail = queue.next;
+      if (tail.next) {
+        return iter(tail);
+      }
+      queue.next = null;
+      result = tail.value;
+      return result;
+    };
+    return iter(this.queue);
   }
 }
 
